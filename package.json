@@ -1,4 +1,5 @@
 {
+  "_comment": "プロジェクトの依存関係とスクリプト定義 - name: プロジェクト名, version: プロジェクトバージョン, bin: 実行可能ファイルのパス, scripts: npmスクリプト（build, watch, test, cdk）, dependencies: 実行時依存関係（aws-cdk-lib, constructs）, devDependencies: 開発時依存関係（TypeScript, Jest等） - 用途: プロジェクトのメタデータと依存関係を定義, npm installで依存関係をインストール, npm run buildでTypeScriptをコンパイル - 注意: CDK v1パッケージ（@aws-cdk/aws-*）は使用しない, aws-cdk-libのみを使用（CDK v2の正しい方法）",
   "name": "cdk-docker-saa",
   "version": "0.1.0",
   "bin": {
@@ -13,9 +14,9 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^24.10.1",
+    "aws-cdk": "2.1033.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
-    "aws-cdk": "2.1033.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
   },

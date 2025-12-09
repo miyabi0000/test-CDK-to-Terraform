@@ -1,20 +1,30 @@
 #!/usr/bin/env node
-import * as cdk from 'aws-cdk-lib/core';
+/**
+ * ============================================
+ * CDKアプリケーションのエントリーポイント
+ * ============================================
+ * 
+ * 【構造】
+ * - CDKアプリケーション（App）のインスタンスを作成
+ * - スタック（CdkDockerSaaStack）をアプリに追加
+ * 
+ * 【用途】
+ * - CDKデプロイ時の実行エントリーポイント
+ * - `npx cdk deploy` 実行時にこのファイルが実行される
+ * - AWSアカウントとリージョンの設定を環境変数から取得
+ * 
+ * 【実行方法】
+ * - `npx cdk deploy` でデプロイ
+ * - `npx cdk synth` でCloudFormationテンプレートを生成
+ */
+import * as cdk from 'aws-cdk-lib';
 import { CdkDockerSaaStack } from '../lib/cdk-docker-saa-stack';
 
 const app = new cdk.App();
 new CdkDockerSaaStack(app, 'CdkDockerSaaStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
-
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  /* AWS Account and Region are automatically resolved from AWS CLI configuration */
+  env: { 
+    account: process.env.CDK_DEFAULT_ACCOUNT || process.env.AWS_ACCOUNT_ID,
+    region: process.env.CDK_DEFAULT_REGION || process.env.AWS_DEFAULT_REGION || 'ap-northeast-1'
+  },
 });

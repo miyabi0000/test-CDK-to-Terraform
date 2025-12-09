@@ -1,0 +1,14 @@
+{
+  "_comment": "Dockerアプリケーションの依存関係定義 - name: アプリケーション名, version: アプリケーションバージョン, main: エントリーポイント（server.js）, scripts: npmスクリプト（start）, dependencies: express（Webサーバー）, pg（PostgreSQLクライアント） - 用途: Dockerコンテナ内で実行されるアプリの依存関係を定義, Dockerfileのnpm ciでこのファイルから依存関係をインストール - 注意: package-lock.jsonが必要（Dockerfileでnpm ciを使用）",
+  "name": "saa-learning-app",
+  "version": "1.0.0",
+  "description": "SAA学習用サンプルアプリケーション",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
+  }
+}

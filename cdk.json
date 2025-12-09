@@ -1,5 +1,6 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/cdk-docker-saa.ts",
+  "_comment": "CDK設定ファイル - app: CDKアプリケーションの実行コマンド（bin/cdk-docker-saa.js）, watch: ウォッチモードの設定（ファイル監視）, context: CDKの機能フラグと設定（100個以上） - 用途: CDKコマンド実行時の設定を定義, npx cdk deploy実行時にこの設定が使用される - 注意: 通常は編集不要, CDKのバージョンアップ時に自動更新される場合がある",
+  "app": "node bin/cdk-docker-saa.js",
   "watch": {
     "include": [
       "**"

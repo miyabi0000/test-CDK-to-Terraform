@@ -1,4 +1,5 @@
 {
+  "_comment": "TypeScript設定ファイル - compilerOptions: TypeScriptコンパイラの設定（target: ES2022, module: NodeNext, strict: true）, exclude: コンパイル対象外のディレクトリ - 用途: TypeScriptのコンパイル設定を定義, npm run build実行時にこの設定が使用される - 注意: 通常は編集不要, 型チェックの厳密さを変更したい場合のみ編集",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
