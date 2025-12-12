@@ -130,7 +130,7 @@ variable "database_allocated_storage" {
 variable "database_engine_version" {
   description = "PostgreSQLのバージョン"
   type        = string
-  default     = "15.4"
+  default     = "15.15"
   
   # 利用可能なバージョン:
   # - 15.x: 最新系（新機能が使える）
@@ -154,25 +154,22 @@ variable "database_multi_az" {
 # ECS/コンテナ設定
 # ============================================
 
-variable "ecs_task_cpu" {
-  description = "ECSタスクのCPUユニット数"
-  type        = string
-  default     = "256"
+variable "container_cpu" {
+  description = "コンテナに割り当てるCPUユニット数（1024 = 1 vCPU）"
+  type        = number
+  default     = 256
   
   # CPU値の意味:
   # - 256 = 0.25 vCPU
   # - 512 = 0.5 vCPU
   # - 1024 = 1 vCPU
   # - 2048 = 2 vCPU
-  # 
-  # Fargateの制約:
-  # - CPUとメモリは決められた組み合わせのみ可能
 }
 
-variable "ecs_task_memory" {
-  description = "ECSタスクのメモリ（MB）"
-  type        = string
-  default     = "512"
+variable "container_memory" {
+  description = "コンテナに割り当てるメモリ（MiB）"
+  type        = number
+  default     = 512
   
   # メモリ値の意味:
   # - 512 = 512MB = 0.5GB
@@ -183,38 +180,35 @@ variable "ecs_task_memory" {
   # - 512, 1024, 2048
 }
 
-variable "ecs_desired_count" {
-  description = "ECSサービスで実行する希望タスク数"
+variable "desired_count" {
+  description = "ECSサービスで起動する desired タスク数"
   type        = number
-  default     = 2
+  default     = 1
   
   # タスク数の考え方:
-  # - 1: 単一タスク（障害時にダウンタイムあり）
+  # - 1: 単一タスク（学習用、コスト最小）
   # - 2: 冗長構成（1つが落ちても大丈夫）
   # - 3以上: 高負荷対応
-  # 
-  # Auto Scalingと組み合わせることも可能
 }
 
 variable "container_port" {
   description = "コンテナが待ち受けるポート番号"
   type        = number
-  default     = 8080
+  default     = 3000
   
   # ポート番号解説:
-  # - 8080: Webアプリケーションでよく使われる
-  # - ALBは80番で受けて、コンテナの8080に転送
+  # - 3000: Node.jsアプリケーションのデフォルト
+  # - ALBは80番で受けて、コンテナの3000に転送
 }
 
-variable "container_image_tag" {
-  description = "使用するコンテナイメージのタグ"
+variable "health_check_path" {
+  description = "ヘルスチェックのパス"
   type        = string
-  default     = "latest"
+  default     = "/"
   
-  # イメージタグのベストプラクティス:
-  # - 開発: latest
-  # - 本番: 具体的なバージョン（v1.0.0等）
-  # - latesトは予期しない更新のリスクあり
+  # ヘルスチェック解説:
+  # - ALBがコンテナの健全性を確認するためのエンドポイント
+  # - 200 OKを返すパスを指定
 }
 
 # ============================================

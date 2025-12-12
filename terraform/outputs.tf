@@ -52,90 +52,94 @@ output "database_subnet_ids" {
 }
 
 # ============================================
-# データベース関連の出力（フェーズ3で有効化）
+# データベース関連の出力
 # ============================================
 
-# output "database_endpoint" {
-#   description = "RDSデータベースのエンドポイント（接続先アドレス）"
-#   value       = try(module.database.db_instance_endpoint, null)
-# }
-# 
-# output "database_name" {
-#   description = "データベース名"
-#   value       = var.database_name
-# }
-# 
-# output "database_secret_arn" {
-#   description = "データベース認証情報が保存されているSecrets ManagerのARN"
-#   value       = try(module.database.db_secret_arn, null)
-#   sensitive   = true
-# }
+output "database_endpoint" {
+  description = "RDSデータベースのエンドポイント"
+  value       = try(module.database.db_endpoint, null)
+}
+
+output "database_name" {
+  description = "データベース名"
+  value       = var.database_name
+}
+
+output "database_secret_arn" {
+  description = "Secrets Manager ARN"
+  value       = try(module.database.secret_arn, null)
+  sensitive   = true
+}
 
 # ============================================
-# コンテナ関連の出力（フェーズ4で有効化）
+# ECR関連の出力
 # ============================================
 
-# output "ecr_repository_url" {
-#   description = "ECRリポジトリのURL（Dockerイメージのプッシュ先）"
-#   value       = try(module.ecs.ecr_repository_url, null)
-# }
-# 
-# output "ecs_cluster_name" {
-#   description = "ECSクラスター名"
-#   value       = try(module.ecs.ecs_cluster_name, null)
-# }
-# 
-# output "ecs_service_name" {
-#   description = "ECSサービス名"
-#   value       = try(module.ecs.ecs_service_name, null)
-# }
+output "ecr_repository_url" {
+  description = "ECRリポジトリURL"
+  value       = aws_ecr_repository.app.repository_url
+}
+
+output "ecr_repository_name" {
+  description = "ECRリポジトリ名"
+  value       = aws_ecr_repository.app.name
+}
 
 # ============================================
-# ロードバランサー関連の出力（フェーズ4で有効化）
+# ECS関連の出力
 # ============================================
 
-# output "load_balancer_dns_name" {
-#   description = "Application Load BalancerのDNS名（アプリケーションのアクセスURL）"
-#   value       = try(module.ecs.alb_dns_name, null)
-# }
-# 
-# output "load_balancer_zone_id" {
-#   description = "ALBのRoute53ホストゾーンID"
-#   value       = try(module.ecs.alb_zone_id, null)
-# }
+output "ecs_cluster_name" {
+  description = "ECSクラスター名"
+  value       = try(module.ecs.ecs_cluster_name, null)
+}
+
+output "ecs_service_name" {
+  description = "ECSサービス名"
+  value       = try(module.ecs.ecs_service_name, null)
+}
 
 # ============================================
-# アクセス情報のまとめ（フェーズ4で有効化）
+# ロードバランサー関連の出力
 # ============================================
 
-# output "application_url" {
-#   description = "🚀 アプリケーションにアクセスするURL"
-#   value       = try("http://${module.ecs.alb_dns_name}", "ALBがまだ作成されていません")
-# }
-# 
-# output "next_steps" {
-#   description = "📋 次のステップ"
-#   value = <<-EOT
-#   
-#   ✅ Terraform apply が完了しました！
-#   
-#   次のステップ:
-#   
-#   1. アプリケーションにアクセス:
-#      ${try("http://${module.ecs.alb_dns_name}", "ALBがまだ作成されていません")}
-#   
-#   2. Dockerイメージをプッシュ:
-#      docker tag your-app:latest ${try(module.ecs.ecr_repository_url, "ECRがまだ作成されていません")}:latest
-#      docker push ${try(module.ecs.ecr_repository_url, "ECRがまだ作成されていません")}:latest
-#   
-#   3. ECSサービスを更新:
-#      aws ecs update-service --cluster ${try(module.ecs.ecs_cluster_name, "クラスターがまだ作成されていません")} \
-#        --service ${try(module.ecs.ecs_service_name, "サービスがまだ作成されていません")} \
-#        --force-new-deployment
-#   
-#   4. ログを確認:
-#      aws logs tail /ecs/saa-learning --follow
-#   
-#   EOT
-# }
+output "load_balancer_dns_name" {
+  description = "Application Load BalancerのDNS名（アプリケーションのアクセスURL）"
+  value       = try(module.ecs.alb_dns_name, null)
+}
+
+# ============================================
+# アクセス情報のまとめ
+# ============================================
+
+output "application_url" {
+  description = "🚀 アプリケーションにアクセスするURL"
+  value       = try("http://${module.ecs.alb_dns_name}", "ALBがまだ作成されていません")
+}
+
+output "next_steps" {
+  description = "📋 次のステップ"
+  value = <<-EOT
+  
+  ✅ Terraform apply が完了しました！
+  
+  次のステップ:
+  
+  1. アプリケーションにアクセス:
+     ${try("http://${module.ecs.alb_dns_name}", "ALBがまだ作成されていません")}
+  
+  2. Dockerイメージをプッシュ:
+     docker tag your-app:latest ${aws_ecr_repository.app.repository_url}:latest
+     docker push ${aws_ecr_repository.app.repository_url}:latest
+  
+  3. ECSサービスを更新:
+     aws ecs update-service --cluster ${try(module.ecs.ecs_cluster_name, "クラスターがまだ作成されていません")} \
+       --service ${try(module.ecs.ecs_service_name, "サービスがまだ作成されていません")} \
+       --force-new-deployment
+  
+  4. ログを確認:
+     aws logs tail /ecs/saa-learning --follow
+  
+  EOT
+}
 
