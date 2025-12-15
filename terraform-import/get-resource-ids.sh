@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "=== 既存リソースID収集 ==="
+echo ""
+echo "VPC:"
+aws ec2 describe-vpcs --filters "Name=tag:Project,Values=SAA-Learning" --query 'Vpcs[0].VpcId' --output text
+echo ""
+echo "ECR Repository:"
+aws ecr describe-repositories --repository-names saa-learning-app --query 'repositories[0].repositoryName' --output text 2>/dev/null || echo "Not found"
+echo ""
+echo "RDS Instance:"
+aws rds describe-db-instances --db-instance-identifier saa-learning-db --query 'DBInstances[0].DBInstanceIdentifier' --output text 2>/dev/null || echo "Not found"
+echo ""
+echo "ECS Cluster:"
+aws ecs describe-clusters --clusters saa-learning-cluster --query 'clusters[0].clusterName' --output text 2>/dev/null || echo "Not found"
+echo ""
+echo "ALB:"
+aws elbv2 describe-load-balancers --names saa-learning-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text 2>/dev/null || echo "Not found"
