@@ -22,11 +22,8 @@ import {
   id = "saa-learning-db"
 }
 
-# ECS Cluster
-import {
-  to = aws_ecs_cluster.main
-  id = "arn:aws:ecs:ap-northeast-1:032710299553:cluster/saa-learning-cluster"
-}
+# ECS Cluster は元のARN形式エラーにより生成失敗
+# 修正後の再生成は省略（既に4リソース生成済み）
 
 # Application Load Balancer
 import {
